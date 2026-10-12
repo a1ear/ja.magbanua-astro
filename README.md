@@ -99,9 +99,15 @@ src/
 
 ## Hosting
 
-Vercel, static output. `vercel.json` sets clean URLs, no trailing slash,
-long-lived caching for hashed assets in `/_astro/`, and basic security
-headers.
+Static output, deployable to either host:
+
+- **Netlify:** `netlify.toml` sets the build command, publish folder (`dist`),
+  Node 22, year-long caching for hashed assets in `/_astro/`, and basic
+  security headers. Clean URLs and the 404 page work by default.
+- **Vercel:** `vercel.json` does the same, plus clean URLs and no trailing
+  slash.
+
+Keep the two files in step when changing headers.
 
 The public address (`site` in `astro.config.mjs`) is detected at build time:
 `SITE_URL` if set, otherwise the production URL the host provides (`URL` on
