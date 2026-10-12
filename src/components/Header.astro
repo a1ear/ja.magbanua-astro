@@ -1,0 +1,78 @@
+---
+import { NAV, SITE } from '../site';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header
+  data-header
+  class="bg-bg/85 border-line sticky top-0 z-50 border-b backdrop-blur-md transition-transform duration-300 motion-reduce:transition-none"
+>
+  <div class="wrap flex h-16 items-center justify-between gap-4">
+    <a href="/" class="font-display text-xl font-medium tracking-tight" aria-label={`${SITE.name}, home`}>
+      Joshua<span class="text-accent">.</span>
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-1 lg:flex">
+      {
+        NAV.map((item) => (
+          <a href={item.href} class="text-muted hover:text-ink px-3 py-2 text-sm transition-colors">
+            {item.label}
+          </a>
+        ))
+      }
+      <span class="bg-line mx-2 h-5 w-px" aria-hidden="true"></span>
+      <ThemeToggle />
+    </nav>
+
+    <div class="flex items-center gap-1 lg:hidden">
+      <ThemeToggle />
+      <button
+        type="button"
+        data-menu-open
+        aria-haspopup="dialog"
+        aria-controls="mobile-menu"
+        class="grid size-11 place-items-center"
+        aria-label="Open menu"
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h18M3 16h18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog
+  id="mobile-menu"
+  data-menu
+  aria-label="Menu"
+  class="on-brand grain m-0 h-dvh max-h-none w-full max-w-none p-0 backdrop:bg-transparent lg:hidden"
+>
+  <div class="wrap flex h-full flex-col">
+    <div class="flex h-16 items-center justify-between">
+      <span class="eyebrow">Menu</span>
+      <button type="button" data-menu-close class="grid size-11 place-items-center" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" stroke="currentColor" stroke-width="1.5">
+          <path d="M5 5l14 14M19 5L5 19"></path>
+        </svg>
+      </button>
+    </div>
+    <nav aria-label="Mobile" class="mt-8 flex-1">
+      <ol>
+        {
+          NAV.map((item, i) => (
+            <li class="border-line border-t last:border-b">
+              <a href={item.href} data-menu-link class="flex items-baseline gap-4 py-5">
+                <span class="text-muted font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
+                <span class="display text-5xl">{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+    <p class="text-muted pb-8 text-sm">
+      <a href={`mailto:${SITE.email}`} class="link">{SITE.email}</a>
+    </p>
+  </div>
+</dialog>

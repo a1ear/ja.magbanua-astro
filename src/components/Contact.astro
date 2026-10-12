@@ -1,0 +1,138 @@
+---
+import { SITE } from '../site';
+
+const headline = 'Let’s talk';
+const letters = [...headline];
+---
+
+<section id="contact" aria-labelledby="contact-title">
+  <div class="wrap pt-24 pb-20 lg:pt-32 lg:pb-28">
+    <div class="section-head">
+      <p class="eyebrow">06 / Contact</p>
+      <p class="eyebrow inline-flex items-center gap-2">
+        <span class="bg-accent size-1.5 rounded-full" aria-hidden="true"></span>
+        {SITE.availability}
+      </p>
+    </div>
+
+    <h2 id="contact-title" class="sr-only">Contact</h2>
+    <a
+      href={`mailto:${SITE.email}`}
+      class="contact-big display mt-10 block text-[clamp(4rem,17vw,15rem)] leading-[0.85]"
+      aria-label={`${headline}: email ${SITE.email}`}
+      data-magnetic
+    >
+      <span aria-hidden="true" class="inline-flex">
+        {letters.map((ch, i) => <span style={`--i:${i}`}>{ch === ' ' ? ' ' : ch}</span>)}
+      </span>
+      <span aria-hidden="true" class="contact-arrow text-accent">&nearr;</span>
+    </a>
+
+    <div class="mt-12 flex flex-wrap items-center gap-3">
+      <span class="font-mono text-base sm:text-lg">{SITE.email}</span>
+      <button type="button" class="btn btn-ghost min-h-11 py-2 text-sm" data-copy={SITE.email}>
+        Copy email
+      </button>
+    </div>
+
+    <div class="border-line mt-16 grid gap-10 border-t pt-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <h3 class="eyebrow mb-3">Elsewhere</h3>
+        <ul class="space-y-2">
+          {
+            SITE.socials.map((s) => (
+              <li>
+                <a href={s.href} class="hover:text-accent inline-flex gap-2" target="_blank" rel="me noopener">
+                  {s.label} <span class="text-muted">{s.handle}</span>
+                  <span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h3 class="eyebrow mb-3">Resume</h3>
+        <a
+          href={SITE.resume}
+          download="Joshua_Anton_Magbanua_Resume.pdf"
+          class="hover:text-accent inline-flex items-center gap-2"
+        >
+          Download PDF <span aria-hidden="true">&darr;</span>
+        </a>
+      </div>
+      <div>
+        <h3 class="eyebrow mb-3">Based in</h3>
+        <p>{SITE.location}</p>
+      </div>
+      <div>
+        <h3 class="eyebrow mb-3">Local time</h3>
+        <p>
+          <time data-clock data-tz={SITE.timeZone}>Manila, UTC+8</time>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    data-toast
+    role="status"
+    aria-live="polite"
+    class="toast bg-ink text-bg pointer-events-none fixed bottom-6 left-1/2 z-[60] rounded-sm px-4 py-2 text-sm font-medium"
+  >
+  </div>
+</section>
+
+<style>
+  .contact-big {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.1em;
+  }
+  .contact-big > span:first-child > span {
+    display: inline-block;
+  }
+  .contact-arrow {
+    font-size: 0.4em;
+    margin-top: 0.15em;
+  }
+  .toast {
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+  }
+  .toast:global(.is-on) {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .toast:empty {
+    padding: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-big > span:first-child > span {
+      transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.1, 1);
+      transition-delay: calc(var(--i) * 25ms);
+    }
+    .contact-big:hover > span:first-child > span,
+    .contact-big:focus-visible > span:first-child > span {
+      transform: translateY(-0.08em);
+    }
+    .contact-big:hover > span:first-child > span:nth-child(odd),
+    .contact-big:focus-visible > span:first-child > span:nth-child(odd) {
+      transform: translateY(0.05em);
+    }
+    .contact-arrow {
+      transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.1, 1);
+    }
+    .contact-big:hover .contact-arrow,
+    .contact-big:focus-visible .contact-arrow {
+      transform: translate(0.1em, -0.1em);
+    }
+    .toast {
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+    }
+  }
+</style>

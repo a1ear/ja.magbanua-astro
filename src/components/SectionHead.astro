@@ -1,0 +1,17 @@
+---
+interface Props {
+  n: string;
+  label: string;
+  id: string;
+  title: string;
+}
+const { n, label, id, title } = Astro.props;
+---
+
+<div class="section-head">
+  <p class="eyebrow">{n} / {label}</p>
+  <slot name="aside" />
+</div>
+<h2 id={id} class="display reveal mt-6 mb-12 max-w-[18ch] text-[clamp(2.5rem,7vw,6rem)] lg:mb-16">
+  {title}
+</h2>

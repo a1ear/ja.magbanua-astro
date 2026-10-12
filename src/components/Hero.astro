@@ -1,0 +1,58 @@
+---
+import { SITE } from '../site';
+import Marquee from './Marquee.astro';
+
+const lines = ['Joshua Anton', 'Magbanua'];
+---
+
+<section class="on-brand grain overflow-hidden" aria-labelledby="hero-title">
+  <!-- Anchored from the top on purpose: the pitch block below is pushed down
+       with mt-auto, so a late font swap there can never move the headline. -->
+  <div class="wrap flex flex-col pt-14 pb-10 lg:min-h-[calc(100svh-4rem)] lg:pt-[max(6rem,16vh)]">
+    <div class="fade-in mb-8 flex flex-wrap items-center gap-x-6 gap-y-3" style="--d:0ms">
+      <p class="eyebrow leading-5">
+        {SITE.role} / CFO &amp; <span class="whitespace-nowrap">co-founder,</span> {SITE.org.name}
+      </p>
+      <p class="border-line inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs">
+        <span class="relative flex size-2" aria-hidden="true">
+          <span class="absolute inline-flex size-full rounded-full bg-accent opacity-60 motion-safe:animate-ping"></span>
+          <span class="relative inline-flex size-2 rounded-full bg-accent"></span>
+        </span>
+        {SITE.availability}
+      </p>
+    </div>
+
+    <h1 id="hero-title" class="display text-[clamp(3.25rem,12vw,11rem)] lg:mb-10">
+      {
+        lines.map((l, i) => (
+          <>
+            <span class="line">
+              <span style={`--i:${i}`}>
+                {l}
+                {i === lines.length - 1 && <span class="text-accent">.</span>}
+              </span>
+            </span>
+            {/* Lines are blocks, so this space is invisible but keeps the
+                accessible name "Joshua Anton Magbanua", not "AntonMagbanua". */}
+            {i < lines.length - 1 && ' '}
+          </>
+        ))
+      }
+    </h1>
+
+    <div class="border-line mt-10 grid gap-8 border-t pt-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end">
+      <p class="fade-in text-muted max-w-[38ch] text-lg leading-relaxed sm:text-xl" style="--d:300ms">
+        {SITE.pitch} Based in {SITE.location}, working remotely.
+      </p>
+      <div class="fade-in flex flex-wrap gap-3" style="--d:400ms">
+        <a href="#work" class="btn btn-primary" data-magnetic>
+          View work <span class="arrow" aria-hidden="true">&darr;</span>
+        </a>
+        <a href={`mailto:${SITE.email}`} class="btn btn-ghost" data-magnetic>
+          Email me <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <Marquee />
+</section>

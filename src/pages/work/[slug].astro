@@ -1,0 +1,141 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../site';
+
+export const getStaticPaths = (async () => {
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project, next } = Astro.props;
+const { Content } = await render(project);
+const p = project.data;
+
+const facts = [
+  ['Role', p.role ?? 'Design and build, end to end'],
+  ['Type', p.kind],
+  ['Status', p.year ? `${p.status} / ${p.year}` : p.status],
+];
+---
+
+<Base
+  title={`${p.title}: ${p.kind} case study | ${SITE.shortName}`}
+  description={p.summary}
+  image={p.cover}
+  imageAlt={p.alt}
+  type="article"
+>
+  <article>
+    <header class="wrap pt-12 pb-10 lg:pt-20">
+      <a href="/#work" class="text-muted hover:text-ink inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase">
+        <span aria-hidden="true">&larr;</span> All work
+      </a>
+      <p class="eyebrow mt-10">{p.kind}{p.nda && ' / Under NDA'}</p>
+      <h1
+        class="display mt-4 text-[clamp(3rem,10vw,9rem)]"
+        style={`view-transition-name: title-${project.id}`}
+      >
+        {p.title}
+      </h1>
+      <p class="text-muted mt-6 max-w-[48ch] text-lg leading-relaxed sm:text-xl">{p.summary}</p>
+    </header>
+
+    {
+      p.cover ? (
+        <div class="case-hero wrap">
+          <div class="border-line overflow-hidden rounded-sm border">
+            <Image
+              src={p.cover}
+              alt={p.alt!}
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1440px) 1344px, 100vw"
+              loading="eager"
+              fetchpriority="high"
+              class="case-hero-img aspect-[16/10] w-full object-cover object-top"
+            />
+          </div>
+        </div>
+      ) : (
+        <div class="wrap">
+          <div class="on-brand grain flex aspect-[16/7] flex-col items-center justify-center gap-4 rounded-sm px-6 text-center">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="5" y="11" width="14" height="9" rx="1" />
+              <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+            </svg>
+            <p class="eyebrow">Confidential, under NDA. No screenshots or public link.</p>
+          </div>
+        </div>
+      )
+    }
+
+    <div class="wrap grid gap-12 py-16 lg:grid-cols-[18rem_1fr] lg:gap-20 lg:py-24">
+      <aside aria-label="Project details">
+        <dl>
+          {
+            facts.map(([k, v]) => (
+              <div class="border-line border-t py-4">
+                <dt class="eyebrow mb-1">{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+          <div class="border-line border-t py-4">
+            <dt class="eyebrow mb-2">Stack</dt>
+            <dd class="flex flex-wrap gap-1.5">{p.tech.map((t) => <span class="tag">{t}</span>)}</dd>
+          </div>
+        </dl>
+        {
+          p.url && (
+            <a href={p.url} class="btn btn-primary mt-4" target="_blank" rel="noopener" data-magnetic>
+              Visit live site <span class="arrow" aria-hidden="true">&nearr;</span>
+              <span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          )
+        }
+      </aside>
+
+      <div class="prose-case max-w-[44rem]">
+        <Content />
+      </div>
+    </div>
+
+    <nav aria-label="Next project" class="border-line border-t">
+      <a href={`/work/${next.id}`} class="wrap group flex items-end justify-between gap-6 py-14 lg:py-20">
+        <span>
+          <span class="eyebrow block">Next project</span>
+          <span class="display mt-3 block text-[clamp(2.5rem,7vw,6rem)]">{next.data.title}</span>
+        </span>
+        <span class="text-accent text-4xl transition-transform group-hover:translate-x-2 motion-reduce:transition-none" aria-hidden="true">&rarr;</span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  /* Slow scale and drift on the screenshot as it scrolls through view. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .case-hero-img {
+        animation-name: case-parallax;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+  @keyframes case-parallax {
+    from {
+      transform: scale(1.08) translateY(-2%);
+    }
+    to {
+      transform: scale(1) translateY(2%);
+    }
+  }
+</style>

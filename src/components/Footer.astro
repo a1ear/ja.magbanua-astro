@@ -1,0 +1,29 @@
+---
+import { SITE } from '../site';
+const year = new Date().getFullYear();
+---
+
+<footer class="on-brand grain">
+  <div class="wrap flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-muted text-sm">
+      &copy; {year} {SITE.name}. Built with Astro, hosted on Vercel.
+    </p>
+    <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+      {
+        SITE.socials.map((s) => (
+          <li>
+            <a href={s.href} class="hover:text-accent" rel="me noopener" target="_blank">
+              {s.label}
+              <span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href="#main" data-to-top class="hover:text-accent inline-flex items-center gap-2">
+          Back to top <span aria-hidden="true">&uarr;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "frontend",
+    "label": "Frontend & UI",
+    "order": 1,
+    "items": [
+      { "name": "Astro", "icon": "siAstro" },
+      { "name": "React", "icon": "siReact" },
+      { "name": "Next.js", "icon": "siNextdotjs" },
+      { "name": "TypeScript", "icon": "siTypescript" },
+      { "name": "JavaScript", "icon": "siJavascript" },
+      { "name": "Tailwind CSS", "icon": "siTailwindcss" },
+      { "name": "shadcn/ui", "icon": "siShadcnui" },
+      { "name": "Framer Motion" },
+      { "name": "Vite", "icon": "siVite" },
+      { "name": "HTML5", "icon": "siHtml5" },
+      { "name": "CSS3", "icon": "siCss" }
+    ]
+  },
+  {
+    "id": "backend",
+    "label": "Backend & Database",
+    "order": 2,
+    "items": [
+      { "name": "Node.js", "icon": "siNodedotjs" },
+      { "name": "PHP", "icon": "siPhp" },
+      { "name": "Prisma", "icon": "siPrisma" },
+      { "name": "Supabase", "icon": "siSupabase" },
+      { "name": "PostgreSQL", "icon": "siPostgresql" },
+      { "name": "MySQL", "icon": "siMysql" },
+      { "name": "Redis", "icon": "siRedis" },
+      { "name": "REST API" }
+    ]
+  },
+  {
+    "id": "mobile",
+    "label": "Mobile",
+    "order": 3,
+    "items": [
+      { "name": "Flutter", "icon": "siFlutter" },
+      { "name": "Dart", "icon": "siDart" }
+    ]
+  },
+  {
+    "id": "tools",
+    "label": "Tools & Platforms",
+    "order": 4,
+    "items": [
+      { "name": "Git", "icon": "siGit" },
+      { "name": "Vercel", "icon": "siVercel" },
+      { "name": "Vercel Analytics", "icon": "siVercel" },
+      { "name": "Cloudflare R2", "icon": "siCloudflare" },
+      { "name": "Upstash", "icon": "siUpstash" },
+      { "name": "HelioHost" }
+    ]
+  }
+]

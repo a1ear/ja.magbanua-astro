@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+
+const groups = (await getCollection('stack')).sort((a, b) => a.data.order - b.data.order);
+const names = [...new Set(groups.flatMap((g) => g.data.items.map((i) => i.name)))];
+---
+
+<div class="marquee border-line border-y py-4">
+  <h2 class="sr-only">Technologies I work with</h2>
+  <div class="marquee-track">
+    {
+      [0, 1].map((copy) => (
+        <ul class="flex shrink-0 items-center" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {names.map((n) => (
+            <li class="text-muted flex items-center font-mono text-sm whitespace-nowrap">
+              <span class="px-5">{n}</span>
+              <span aria-hidden="true" class="text-accent">/</span>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>

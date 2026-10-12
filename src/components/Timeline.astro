@@ -1,0 +1,103 @@
+---
+import { getCollection, render } from 'astro:content';
+import SectionHead from './SectionHead.astro';
+
+const entries = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(entries.map(async (e) => ({ e, ...(await render(e)) })));
+---
+
+<section id="experience" class="wrap pt-24 lg:pt-32" aria-labelledby="experience-title">
+  <SectionHead n="03" label="Experience" id="experience-title" title="Where the work has happened." />
+
+  <div class="timeline relative">
+    <span class="timeline-rail" aria-hidden="true"></span>
+    <span class="timeline-line" aria-hidden="true"></span>
+    <ol class="space-y-14 lg:space-y-20">
+      {
+        rendered.map(({ e, Content }) => (
+          <li class="timeline-item reveal relative grid gap-3 pl-8 lg:grid-cols-[14rem_1fr] lg:gap-12 lg:pl-12">
+            <span class="timeline-dot" aria-hidden="true" />
+            <p class="text-muted pt-1 font-mono text-xs tracking-wider uppercase">
+              {e.data.kind === 'education' ? 'Education / ' : ''}
+              {e.data.period}
+            </p>
+            <div>
+              <h3 class="font-display text-2xl leading-tight tracking-tight sm:text-3xl">
+                {e.data.title}
+              </h3>
+              <p class="text-accent mt-1 text-sm font-medium">{e.data.org}</p>
+              <div class="timeline-body text-muted mt-5 max-w-[60ch] leading-relaxed">
+                <Content />
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    view-timeline-name: --timeline;
+  }
+  .timeline-rail,
+  .timeline-line {
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+  .timeline-line {
+    background: var(--accent);
+    transform-origin: top;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -4px;
+    top: 0.4rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--accent);
+  }
+  .timeline-body :global(ul) {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .timeline-body :global(li) {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+  .timeline-body :global(li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 0.6rem;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  /* The accent line draws down as the list scrolls past. Without
+     scroll-driven animation support it is simply drawn in full. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .timeline-line {
+        animation-name: draw;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: --timeline;
+        animation-range: entry 30% exit 60%;
+      }
+    }
+  }
+  @keyframes draw {
+    from {
+      transform: scaleY(0);
+    }
+  }
+</style>

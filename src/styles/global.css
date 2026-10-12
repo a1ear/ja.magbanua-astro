@@ -1,0 +1,438 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces/opsz.css';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* Dark is the default. Light is used when the visitor picks it, or    */
+/* when their system prefers light and they have not picked anything.  */
+/* Contrast (WCAG 2.1): ink/bg 14.6, muted/bg 7.6, accent/bg 7.8 dark; */
+/* ink/bg 14.9, muted/bg 5.8, accent/bg 6.7 light.                     */
+/* ------------------------------------------------------------------ */
+:root {
+  --navy: #141e30;
+  --steel: #35577d;
+  --gradient: linear-gradient(135deg, var(--navy), var(--steel));
+
+  --bg: #141e30;
+  --surface: #1b2a42;
+  --brand: #35577d;
+  --ink: #eaf0f8;
+  --muted: #9fb1c8;
+  --accent: #8fb4e3;
+  --on-accent: #141e30;
+  --line: rgb(234 240 248 / 0.14);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #eef2f7;
+  --surface: #dfe6ef;
+  --ink: #141e30;
+  --muted: #4b5f78;
+  --accent: #35577d;
+  --on-accent: #eef2f7;
+  --line: rgb(20 30 48 / 0.14);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #eef2f7;
+    --surface: #dfe6ef;
+    --ink: #141e30;
+    --muted: #4b5f78;
+    --accent: #35577d;
+    --on-accent: #eef2f7;
+    --line: rgb(20 30 48 / 0.14);
+    color-scheme: light;
+  }
+}
+
+/* The signature gradient stays navy in both themes, so anything sitting
+   on it gets its own text tokens. #35577D is the light end of the
+   gradient: muted 5.3:1 and accent 5.8:1 against it. */
+.on-brand {
+  --ink: #eaf0f8;
+  --muted: #cfdbea;
+  --accent: #d6e4f5;
+  --on-accent: #141e30;
+  --line: rgb(234 240 248 / 0.2);
+  color: var(--ink);
+  background: var(--gradient);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-brand: var(--brand);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-line: var(--line);
+
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'Cascadia Mono', monospace;
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 90rem;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--bg);
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Shared pieces                                                       */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 90rem) {
+    .wrap {
+      padding-inline: 3rem;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+  }
+
+  .outline-text {
+    color: transparent;
+    -webkit-text-stroke: 1px currentColor;
+    -webkit-text-stroke-color: var(--ink);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .btn-primary:hover {
+    background: var(--ink);
+  }
+  .btn-ghost {
+    border-color: var(--line);
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    border-color: var(--ink);
+  }
+  .btn .arrow {
+    transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .btn:hover .arrow,
+  .btn:focus-visible .arrow {
+    transform: translateX(4px);
+  }
+
+  .link {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .link:hover {
+    color: var(--ink);
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* Film grain for the gradient areas. Inline SVG noise, about 0.4 KB. */
+  .grain {
+    position: relative;
+    isolation: isolate;
+  }
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .prose-case h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+  .prose-case p {
+    color: var(--muted);
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+  .prose-case p:first-child {
+    color: var(--ink);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.5;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion. Everything below only runs when the visitor has not asked   */
+/* for reduced motion, and only animates transform and opacity unless  */
+/* noted.                                                              */
+/* ------------------------------------------------------------------ */
+
+/* Hero headline: each line rises into place while a clip-path uncovers it
+   from the bottom up. The text starts mostly inside its own box (not pushed
+   fully out of it), so the browser counts the headline as painted on the
+   first frame and the reveal does not delay LCP. */
+.line {
+  display: block;
+  overflow: clip;
+  /* Room for descenders and the Fraunces overshoot inside the clip. */
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.line > span {
+  display: block;
+}
+
+/* Marquee: a pure CSS ticker. Two identical groups, moved by -50%. */
+.marquee {
+  overflow: clip;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .line > span {
+    animation: line-up 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  .fade-in {
+    animation: fade-up 0.8s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .marquee-track {
+    animation: marquee 40s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* A marquee that never moves still has to be readable: wrap it instead. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+  .marquee-track {
+    width: auto;
+    flex-wrap: wrap;
+  }
+  .marquee-track > [aria-hidden='true'] {
+    display: none;
+  }
+}
+
+@keyframes line-up {
+  from {
+    transform: translateY(40%);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 -20% 0);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Section entry. Scroll-driven where supported; elsewhere reveal.ts adds
+   .js-reveal to <html> and toggles .is-in with IntersectionObserver.
+   With neither, nothing is hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation-name: fade-up;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    .js-reveal .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 0.8s cubic-bezier(0.2, 0.7, 0.1, 1),
+        transform 0.8s cubic-bezier(0.2, 0.7, 0.1, 1);
+    }
+    .js-reveal .reveal.is-in {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Theme toggle: circular wipe from the button (View Transitions API). */
+/* Page to page: native cross-document view transitions. A plain cross-fade,
+   plus the project title morphing between the work list and its case study
+   (view-transition-name set inline on both). Browsers without support just
+   navigate normally. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* Scoped to .theme-wipe so page-to-page navigations keep the default
+   cross-fade untouched. */
+/* During the wipe, everything belongs to the root snapshot; otherwise the
+   named project titles would cross-fade on their own instead of wiping. */
+html.theme-wipe [style*='view-transition-name'] {
+  view-transition-name: none !important;
+}
+html.theme-wipe::view-transition-old(root),
+html.theme-wipe::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theme-wipe::view-transition-new(root) {
+  animation: wipe 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes wipe {
+  from {
+    clip-path: circle(0 at var(--wipe-x, 100%) var(--wipe-y, 0%));
+  }
+  to {
+    clip-path: circle(var(--wipe-r, 150vmax) at var(--wipe-x, 100%) var(--wipe-y, 0%));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

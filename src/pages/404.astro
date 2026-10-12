@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+---
+
+<Base title={`Page not found | ${SITE.shortName}`} description="This page does not exist." noindex>
+  <section class="wrap flex min-h-[70vh] flex-col justify-center py-24">
+    <p class="eyebrow">Error 404</p>
+    <h1 class="display mt-4 text-[clamp(3.5rem,14vw,12rem)]">
+      Not <span class="outline-text">here.</span>
+    </h1>
+    <p class="text-muted mt-8 max-w-[44ch] text-lg leading-relaxed">
+      The page you were looking for does not exist, or it moved when this site was rebuilt.
+    </p>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a href="/" class="btn btn-primary">Go home <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a href="/#work" class="btn btn-ghost">See the work</a>
+    </div>
+  </section>
+</Base>

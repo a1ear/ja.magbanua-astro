@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+
+const groups = (await getCollection('stack')).sort((a, b) => a.data.order - b.data.order);
+
+// Bento spans on large screens, keyed by group id. Bigger groups get bigger tiles.
+const span: Record<string, string> = {
+  frontend: 'lg:col-span-2 lg:row-span-2',
+  backend: 'lg:col-span-2',
+  mobile: 'lg:col-span-1',
+  tools: 'lg:col-span-1',
+};
+---
+
+<section id="toolkit" class="wrap pt-24 lg:pt-32" aria-labelledby="toolkit-title">
+  <SectionHead n="04" label="Toolkit" id="toolkit-title" title="The tools I reach for." />
+
+  <div class="grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+    {
+      groups.map((g, gi) => (
+        <section
+          class:list={['bg-bg reveal flex flex-col p-6 sm:p-8', span[g.id]]}
+          aria-labelledby={`stack-${g.id}`}
+        >
+          <div class="mb-6 flex items-baseline justify-between gap-4">
+            <h3 id={`stack-${g.id}`} class="font-display text-2xl tracking-tight">
+              {g.data.label}
+            </h3>
+            <span class="text-muted font-mono text-xs">
+              {String(gi + 1).padStart(2, '0')}
+            </span>
+          </div>
+          <ul class:list={['grid gap-2', g.id === 'frontend' ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3' : 'grid-cols-2']}>
+            {g.data.items.map((item) => (
+              <li class="tool border-line flex items-center gap-3 rounded-sm border px-3 py-2.5 text-sm">
+                <Icon name={item.name} icon={item.icon} size={18} class="text-muted shrink-0" />
+                <span class="min-w-0">{item.name}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .tool {
+    transition: border-color 0.2s;
+  }
+  .tool:hover {
+    border-color: var(--accent);
+  }
+</style>

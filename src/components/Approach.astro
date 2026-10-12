@@ -1,0 +1,55 @@
+---
+import SectionHead from './SectionHead.astro';
+
+const principles = [
+  {
+    title: 'Never trust the frontend',
+    body: 'A hidden button is a courtesy, never a permission. Every action that writes data is checked again on the server.',
+  },
+  {
+    title: 'Assume the key leaks',
+    body: 'Ownership is enforced in the database with row level security, not by a WHERE clause in application code.',
+  },
+  {
+    title: 'Never rewrite history',
+    body: 'Prices and rates are snapshotted onto the record, so changing a price today cannot alter an invoice from yesterday.',
+  },
+  {
+    title: 'Attack it before someone else does',
+    body: 'I test the unhappy paths on purpose: invalid input, another user’s record, an admin route without a session.',
+  },
+  {
+    title: 'It has to beat paper',
+    body: 'If the software is slower than the notebook it replaces, people go back to the notebook. Then it has failed.',
+  },
+];
+---
+
+<section id="approach" class="wrap pt-24 lg:pt-32" aria-labelledby="approach-title">
+  <SectionHead
+    n="05"
+    label="Approach"
+    id="approach-title"
+    title="I do not build demos. I build software that is ready to ship."
+  />
+
+  <ol class="grid gap-px overflow-hidden rounded-sm border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+    {
+      principles.map((p, i) => (
+        <li class="bg-bg reveal flex flex-col gap-4 p-6 sm:p-8">
+          <span class="text-accent font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="font-display text-2xl leading-tight tracking-tight">{p.title}</h3>
+          <p class="text-muted leading-relaxed">{p.body}</p>
+        </li>
+      ))
+    }
+    <li class="bg-bg reveal flex flex-col justify-between gap-6 p-6 sm:p-8">
+      <p class="text-muted leading-relaxed">
+        Every project is audited across thirteen layers, then run through seven gates before it ships.
+      </p>
+      <a href="/approach" class="btn btn-ghost self-start">
+        Read the full doctrine <span class="arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </li>
+  </ol>
+</section>

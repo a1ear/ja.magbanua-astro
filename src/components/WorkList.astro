@@ -1,0 +1,276 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import SectionHead from './SectionHead.astro';
+
+const projects = (await getCollection('projects', (p) => p.data.featured)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id="work" class="wrap pt-24 lg:pt-32" aria-labelledby="work-title">
+  <SectionHead n="01" label="Work" id="work-title" title="Selected work, shipped and in use.">
+    <p slot="aside" class="eyebrow">{pad(projects.length)} projects</p>
+  </SectionHead>
+
+  <ol class="border-line border-b" data-work-list>
+    {
+      projects.map((p, i) => (
+        <li class="border-line border-t">
+          <a href={`/work/${p.id}`} class="work-row" data-work-row={i}>
+            {p.data.cover ? (
+              <Image
+                src={p.data.cover}
+                alt=""
+                widths={[400, 700, 1000, 1400]}
+                sizes="(min-width: 640px) calc(100vw - 4rem), calc(100vw - 2rem)"
+                class="work-thumb"
+                loading="lazy"
+              />
+            ) : (
+              <span class="work-thumb work-thumb-nda" aria-hidden="true">
+                <span class="eyebrow">Confidential, under NDA</span>
+              </span>
+            )}
+            <span class="work-index text-muted font-mono text-sm">{pad(i + 1)}</span>
+            <span class="work-main">
+              <span class="work-title display" style={`view-transition-name: title-${p.id}`}>
+                {p.data.title}
+              </span>
+              <span class="text-muted mt-3 block max-w-[52ch] text-base leading-relaxed">
+                {p.data.summary}
+              </span>
+            </span>
+            <span class="work-tags">
+              {p.data.tech.slice(0, 4).map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+              {p.data.tech.length > 4 && (
+                <span class="tag">
+                  +{p.data.tech.length - 4}
+                  <span class="sr-only"> more</span>
+                </span>
+              )}
+            </span>
+            <span class="work-meta text-muted font-mono text-xs">
+              <span>{p.data.kind}</span>
+              <span class="text-ink">
+                {p.data.status}
+                {p.data.year && ` / ${p.data.year}`}
+              </span>
+            </span>
+            <span class="work-arrow" aria-hidden="true">
+              &rarr;
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+
+  <!-- Desktop only: one floating preview that follows the cursor.
+       Decorative, since every row already carries its information as text. -->
+  <div class="work-preview" data-work-preview aria-hidden="true">
+    {
+      projects.map((p, i) =>
+        p.data.cover ? (
+          <Image
+            src={p.data.cover}
+            alt=""
+            width={720}
+            class="work-preview-img"
+            data-preview-img={i}
+            loading="lazy"
+          />
+        ) : (
+          <div class="work-preview-img work-thumb-nda" data-preview-img={i}>
+            <span class="eyebrow">Confidential, under NDA</span>
+          </div>
+        ),
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .work-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    grid-template-areas:
+      'thumb thumb'
+      'index main'
+      '. tags'
+      '. meta';
+    gap: 0.75rem 1rem;
+    padding-block: 1.75rem;
+    text-decoration: none;
+  }
+  .work-thumb {
+    grid-area: thumb;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    margin-bottom: 0.75rem;
+  }
+  .work-thumb-nda {
+    display: grid;
+    place-items: center;
+    background:
+      repeating-linear-gradient(45deg, var(--line) 0 1px, transparent 1px 14px), var(--surface);
+  }
+  .work-index {
+    grid-area: index;
+    padding-top: 0.5rem;
+  }
+  .work-main {
+    grid-area: main;
+  }
+  .work-title {
+    display: block;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1;
+  }
+  .work-tags {
+    grid-area: tags;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+  .work-meta {
+    grid-area: meta;
+    display: flex;
+    gap: 1rem;
+  }
+  .work-arrow {
+    display: none;
+  }
+
+  @media (min-width: 40rem) {
+    .work-row {
+      grid-template-columns: 3rem 1fr minmax(0, 12rem);
+      grid-template-areas:
+        'thumb thumb thumb'
+        'index main meta'
+        '. tags tags';
+    }
+    .work-meta {
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      gap: 0.25rem;
+      padding-top: 0.5rem;
+    }
+  }
+
+  /* Desktop with a real pointer: rows become a wide list and the
+     screenshot moves into the floating preview. */
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+    .work-row {
+      grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 17rem) 10rem 2rem;
+      grid-template-areas: 'index main tags meta arrow';
+      align-items: start;
+      column-gap: 2rem;
+      padding-block: 2.25rem;
+    }
+    .work-thumb {
+      display: none;
+    }
+    .work-tags {
+      padding-top: 0.5rem;
+      align-content: start;
+    }
+    .work-arrow {
+      display: block;
+      grid-area: arrow;
+      padding-top: 0.25rem;
+      text-align: right;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+    /* Accent rule that grows across the top of the row on hover/focus. */
+    .work-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -1px;
+      height: 1px;
+      width: 100%;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+    .work-row:hover::before,
+    .work-row:focus-visible::before {
+      transform: scaleX(1);
+    }
+
+    .work-preview {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 40;
+      width: 22rem;
+      aspect-ratio: 16 / 10;
+      pointer-events: none;
+      opacity: 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.5);
+      will-change: transform, opacity;
+    }
+    .work-preview.is-on {
+      opacity: 1;
+    }
+    .work-preview-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      opacity: 0;
+    }
+    .work-preview-img.is-active {
+      opacity: 1;
+    }
+  }
+
+  .work-preview {
+    display: none;
+  }
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+    .work-preview {
+      display: block;
+    }
+  }
+
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .work-row > * {
+      transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.1, 1);
+    }
+    .work-row:hover > .work-main,
+    .work-row:focus-visible > .work-main,
+    .work-row:hover > .work-index,
+    .work-row:focus-visible > .work-index {
+      transform: translateX(1rem);
+    }
+    .work-row:hover > .work-arrow,
+    .work-row:focus-visible > .work-arrow {
+      transform: translateX(0.5rem);
+    }
+    .work-row::before {
+      transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.1, 1);
+    }
+    .work-preview,
+    .work-preview-img {
+      transition: opacity 0.3s ease;
+    }
+  }
+</style>

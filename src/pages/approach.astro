@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+
+const layers = [
+  ['Frontend', 'Every state the interface can be in: loading, empty, error.'],
+  ['Backend & APIs', 'Routing, business logic, validation. Never trust the client.'],
+  ['Database & Storage', 'Schema, constraints, indexes, backups.'],
+  ['Auth & Permissions', 'Who you are is not the same as what you may do.'],
+  ['Hosting & Deploy', 'Real domain, HTTPS, real database, real environment.'],
+  ['Cloud & Compute', 'Infrastructure sized to the problem, not to impress.'],
+  ['CI/CD & Version Control', 'Git to build to tests to deploy. The repo is production too.'],
+  ['Security & RLS', 'Inputs validated, routes protected, ownership enforced in the database.'],
+  ['Rate Limiting', 'What happens if someone abuses this endpoint?'],
+  ['Caching & CDN', 'Answer before the server, answer before the database.'],
+  ['Scaling', 'Know where the architecture goes, build it when traffic arrives.'],
+  ['Monitoring & Logs', 'Production does not run on console.log.'],
+  ['Availability & Recovery', 'Backups, rollback, restore. One dead server is not the end.'],
+];
+
+const gates = [
+  ['Functional', 'Every feature, form, and CRUD path actually works.'],
+  ['Security', 'Try to break in before anyone else gets the chance.'],
+  ['Responsive', 'Mobile, tablet, laptop, desktop, large screen.'],
+  ['SEO & Web', 'Title, meta, OG image, sitemap, alt text, real 404.'],
+  ['Performance', 'Measure first. Images, bundle, queries, then cache.'],
+  ['Accessibility', 'Keyboard, focus, contrast, labels, semantics.'],
+  ['Production', 'Real domain, real database, real auth, monitored, backed up.'],
+];
+
+const principles = [
+  ['Consider every layer, then scope it on purpose', 'Skipping a layer is a decision, not an oversight. A landing page does not need a rate limiter, but it still gets asked the question.'],
+  ['Never trust the frontend', 'A hidden button is a courtesy, never a permission. Every mutating action re-checks the role on the server before it touches the database.'],
+  ['Assume the key leaks', 'Enforce ownership in the database with row level security, not in the query. A WHERE clause is a filter, not a fence.'],
+  ['Never rewrite history', 'Snapshot rates and prices onto the record when it is entered. Issued records are corrected by voiding and reissuing, which leaves a trail.'],
+  ['Attack it before someone else does', 'Test the unhappy paths: invalid input, another user’s record, an admin route without a session, a spammed endpoint.'],
+  ['Done means handable', 'Not "does it look finished" but "could a real user have it today". The last check runs against production, never localhost.'],
+];
+
+const philosophy = [
+  ['Ideas are easy, execution is everything', 'The plan is not the product.'],
+  ['It has to beat paper', 'If it is slower than the notebook, it has failed.'],
+  ['Boring and running beats clever and broken', 'Choose the option you can still fix in a year.'],
+  ['Build for the person, not the demo', 'Slow connections, old hardware and non-technical users are the normal case.'],
+];
+---
+
+<Base
+  title={`Approach: 13 layers and 7 gates | ${SITE.shortName}`}
+  description="How Joshua Anton Magbanua builds software: every project audited across 13 layers and run through 7 gates before it ships."
+>
+  <header class="wrap pt-12 pb-16 lg:pt-20 lg:pb-24">
+    <a href="/#approach" class="text-muted hover:text-ink inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase">
+      <span aria-hidden="true">&larr;</span> Back
+    </a>
+    <p class="eyebrow mt-10">Approach</p>
+    <h1 class="display mt-4 max-w-[16ch] text-[clamp(3rem,9vw,8rem)]">I do not build demos.</h1>
+    <p class="text-muted mt-8 max-w-[52ch] text-lg leading-relaxed sm:text-xl">
+      I build software that is ready to ship. Build it, test it, break it, secure it, optimize it,
+      ship it. Every project is audited across thirteen layers, then run through seven gates before
+      it goes out.
+    </p>
+  </header>
+
+  <section class="wrap pb-24" aria-labelledby="layers-title">
+    <div class="section-head"><h2 id="layers-title" class="eyebrow">The 13 layers</h2></div>
+    <ol class="grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {
+        layers.map(([t, d], i) => (
+          <li class="bg-bg reveal p-6">
+            <span class="text-accent font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="font-display mt-3 text-xl tracking-tight">{t}</h3>
+            <p class="text-muted mt-2 leading-relaxed">{d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap pb-24" aria-labelledby="gates-title">
+    <div class="section-head"><h2 id="gates-title" class="eyebrow">The 7 gates</h2></div>
+    <ol class="border-line border-b">
+      {
+        gates.map(([t, d], i) => (
+          <li class="border-line reveal grid gap-2 border-t py-6 sm:grid-cols-[4rem_16rem_1fr] sm:gap-8">
+            <span class="text-accent font-mono text-xs sm:pt-2">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="font-display text-2xl tracking-tight">{t}</h3>
+            <p class="text-muted leading-relaxed sm:pt-1">{d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap pb-24" aria-labelledby="principles-title">
+    <div class="section-head"><h2 id="principles-title" class="eyebrow">Principles</h2></div>
+    <ol class="grid gap-x-12 gap-y-10 pt-6 md:grid-cols-2">
+      {
+        principles.map(([t, d]) => (
+          <li class="reveal">
+            <h3 class="font-display text-2xl leading-tight tracking-tight">{t}</h3>
+            <p class="text-muted mt-3 leading-relaxed">{d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap pb-24 lg:pb-32" aria-labelledby="philosophy-title">
+    <div class="section-head"><h2 id="philosophy-title" class="eyebrow">Philosophy</h2></div>
+    <ul class="pt-6">
+      {
+        philosophy.map(([t, d]) => (
+          <li class="border-line reveal border-b py-6">
+            <p class="display text-[clamp(1.75rem,4vw,3rem)]">{t}.</p>
+            <p class="text-muted mt-2">{d}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <a href={`mailto:${SITE.email}`} class="btn btn-primary mt-12" data-magnetic>
+      Work with me <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+  </section>
+</Base>

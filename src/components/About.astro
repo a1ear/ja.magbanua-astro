@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
+import { SITE } from '../site';
+import SectionHead from './SectionHead.astro';
+
+const facts = [
+  ['Based in', 'Kabankalan City, PH'],
+  ['Works', 'Remote, PH time (UTC+8)'],
+  ['Education', 'BS IT, University of St. La Salle, 2025'],
+  ['Languages', 'English, Filipino'],
+];
+---
+
+<section id="about" class="wrap pt-24 lg:pt-32" aria-labelledby="about-title">
+  <SectionHead n="02" label="About" id="about-title" title="Ideas are easy. Execution is everything." />
+
+  <div class="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+    <aside class="lg:sticky lg:top-24 lg:self-start" aria-label="Quick facts">
+      <Image
+        src={portrait}
+        alt="Joshua Anton Magbanua in graduation regalia, wearing an academic hood and medal"
+        widths={[360, 540, 720]}
+        sizes="(min-width: 1024px) 36vw, (min-width: 640px) 60vw, 100vw"
+        class="border-line aspect-[4/5] w-full max-w-md rounded-sm border object-cover object-[50%_15%]"
+      />
+      <dl class="mt-6 max-w-md">
+        {
+          facts.map(([k, v]) => (
+            <div class="border-line flex justify-between gap-6 border-t py-3 text-sm">
+              <dt class="text-muted font-mono text-xs tracking-wider uppercase">{k}</dt>
+              <dd class="text-right">{v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </aside>
+
+    <div class="about-copy max-w-[40rem] space-y-8 text-xl leading-relaxed sm:text-2xl">
+      <p>
+        I graduated from the University of St. La Salle in 2025 with a BS in Information Technology,
+        majoring in Web and Mobile Application Development, and made the Dean's List.
+      </p>
+      <p>
+        Most of my work is the unglamorous kind: business systems that take a company off paper and
+        spreadsheets and onto something a team can actually rely on. Billing, records, and the day to
+        day admin nobody wants to do twice. In between, I build landing pages for businesses that need
+        to be found.
+      </p>
+      <p>
+        I am also CFO and co-founder of <a href={SITE.org.url} class="link" target="_blank" rel="noopener"
+          >{SITE.org.name}<span class="sr-only"> (opens in a new tab)</span></a
+        >, a software development agency building custom enterprise systems: inventory, CRM, HR and
+        payroll, and business automation.
+      </p>
+      <p>
+        I also do the hands-on side: troubleshooting, hardware repair, and network setup. It is useful
+        context. It is hard to design software for people whose machines you have never had to fix.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Each paragraph brightens from muted to full ink while it crosses the
+     middle of the viewport. Both colours pass AA, so the dimmed state is
+     still fully readable. Colour is paint-only, never layout. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .about-copy > p {
+        animation-name: about-highlight;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: view();
+        animation-range: cover 15% cover 85%;
+      }
+    }
+  }
+  @keyframes about-highlight {
+    0%,
+    100% {
+      color: var(--muted);
+    }
+    35%,
+    65% {
+      color: var(--ink);
+    }
+  }
+</style>

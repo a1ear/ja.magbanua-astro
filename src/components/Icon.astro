@@ -1,0 +1,32 @@
+---
+import * as icons from 'simple-icons';
+
+interface Props {
+  name: string;
+  icon?: string;
+  size?: number;
+  class?: string;
+}
+
+const { name, icon, size = 20, class: className } = Astro.props;
+const data = icon ? (icons as Record<string, { path: string } | undefined>)[icon] : undefined;
+if (icon && !data) throw new Error(`Unknown Simple Icons export "${icon}" for ${name}`);
+// Tools without a Simple Icons entry get a plain letter badge instead.
+const letter = name.replace(/[^A-Za-z]/g, '').charAt(0).toUpperCase();
+---
+
+{
+  data ? (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" class={className}>
+      <path d={data.path} />
+    </svg>
+  ) : (
+    <span
+      aria-hidden="true"
+      class:list={['border-current grid place-items-center rounded-sm border font-mono text-[0.6em] leading-none font-semibold', className]}
+      style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.6)}px`}
+    >
+      {letter}
+    </span>
+  )
+}

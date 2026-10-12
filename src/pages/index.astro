@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import WorkList from '../components/WorkList.astro';
+import About from '../components/About.astro';
+import Timeline from '../components/Timeline.astro';
+import Toolkit from '../components/Toolkit.astro';
+import Approach from '../components/Approach.astro';
+import Contact from '../components/Contact.astro';
+import { getImage } from 'astro:assets';
+import portraitWide from '../assets/portrait-wide.jpg';
+import { SITE } from '../site';
+
+const site = Astro.site!.href.replace(/\/$/, '');
+const image = new URL((await getImage({ src: portraitWide, width: 1200, format: 'jpg' })).src, Astro.site).href;
+
+// ProfilePage + Person + Organization, linked by @id, so search engines can
+// resolve the person and the agency as two connected entities.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ProfilePage',
+      '@id': `${site}/#profilepage`,
+      url: `${site}/`,
+      name: SITE.title,
+      inLanguage: 'en',
+      mainEntity: { '@id': `${site}/#person` },
+    },
+    {
+      '@type': 'Person',
+      '@id': `${site}/#person`,
+      name: SITE.name,
+      alternateName: SITE.shortName,
+      url: `${site}/`,
+      image,
+      email: SITE.email,
+      jobTitle: 'Full Stack Developer, CFO & Co-Founder at NightPatch Dev',
+      description:
+        'Full Stack Developer based in Kabankalan City, Philippines, and CFO and co-founder of NightPatch Dev, a software development agency. Builds business systems and websites for local companies.',
+      address: { '@type': 'PostalAddress', addressLocality: 'Kabankalan City', addressCountry: 'PH' },
+      worksFor: { '@id': `${site}/#nightpatchdev` },
+      alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of St. La Salle' },
+      hasCredential: {
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'degree',
+        name: 'BS Information Technology, Web and Mobile Application Development',
+        recognizedBy: { '@type': 'CollegeOrUniversity', name: 'University of St. La Salle' },
+      },
+      award: "Dean's List Academic Achievement Award",
+      knowsAbout: [
+        'React', 'Next.js', 'Astro', 'TypeScript', 'JavaScript', 'Tailwind CSS', 'Node.js', 'PHP',
+        'MySQL', 'PostgreSQL', 'Supabase', 'Prisma', 'Flutter', 'Dart',
+        'Full Stack Development', 'Web Design', 'Mobile App Development',
+      ],
+      knowsLanguage: ['English', 'Filipino'],
+      sameAs: SITE.socials.map((s) => s.href),
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${site}/#nightpatchdev`,
+      name: SITE.org.name,
+      url: SITE.org.url,
+      logo: 'https://www.nightpatchdev.online/icon.png',
+      description: SITE.org.description,
+      founder: { '@id': `${site}/#person` },
+    },
+  ],
+};
+---
+
+<Base jsonLd={jsonLd}>
+  <Hero />
+  <WorkList />
+  <About />
+  <Timeline />
+  <Toolkit />
+  <Approach />
+  <Contact />
+</Base>
