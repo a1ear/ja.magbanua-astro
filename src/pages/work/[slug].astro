@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../site';
+import { clampDescription, ids } from '../../seo';
 
 export const getStaticPaths = (async () => {
   const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -22,14 +23,41 @@ const facts = [
   ['Type', p.kind],
   ['Status', p.year ? `${p.status} / ${p.year}` : p.status],
 ];
+
+const id = ids(Astro.site!);
+const pageUrl = new URL(`/work/${project.id}`, Astro.site).href;
+const description = clampDescription(
+  `${p.summary} ${p.kind} built with ${p.tech.slice(0, 4).join(', ')}.`,
+);
+
+// The project itself, credited to Joshua. NDA work gets no public URL.
+const work = {
+  '@type': 'CreativeWork',
+  '@id': `${pageUrl}#project`,
+  name: p.title,
+  description: p.summary,
+  genre: p.kind,
+  keywords: p.tech.join(', '),
+  creator: { '@id': id.person },
+  image: { '@id': `${pageUrl}#primaryimage` },
+  ...(p.url && { url: p.url }),
+  ...(p.year && { dateCreated: String(p.year) }),
+};
 ---
 
 <Base
   title={`${p.title}: ${p.kind} case study | ${SITE.shortName}`}
-  description={p.summary}
+  description={description}
   image={p.cover}
   imageAlt={p.alt}
   type="article"
+  pageExtra={{ mainEntity: { '@id': `${pageUrl}#project` }, author: { '@id': id.person } }}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Work', path: '/#work' },
+    { name: p.title, path: `/work/${project.id}` },
+  ]}
+  schema={[work]}
 >
   <article>
     <header class="wrap pt-12 pb-10 lg:pt-20">

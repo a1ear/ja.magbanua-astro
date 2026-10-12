@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 // The hero headline is the LCP element, so its font is fetched up front.
-import displayFont from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
+import displayFont from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 
 type Props = Parameters<typeof Seo>[0];
 const props = Astro.props;
@@ -21,7 +21,7 @@ const props = Astro.props;
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#141E30" />
     <meta name="google-site-verification" content="RLQEzqRa4pHIf7HP4H5zx-ECyp9D4em97zbtcTJ6HOA" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <Seo {...props} />
 
     <!-- Runs before first paint so a stored theme never flashes the wrong one. -->

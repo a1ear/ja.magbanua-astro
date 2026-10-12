@@ -38,8 +38,9 @@ Content lives in data files, never in components.
   meta tags, the JSON-LD and `llms.txt`.
 - **Resume:** replace `public/resume.pdf`.
 
-`/llms.txt` and the sitemap are generated at build time from the same data,
-so they cannot drift from the page.
+`/sitemap.xml`, `/robots.txt` and `/llms.txt` are generated at build time from
+the same data, so they cannot drift from the page. A new project file shows up
+in all three automatically.
 
 ## Structure
 
@@ -49,7 +50,9 @@ src/
   site.ts               shared facts (name, email, socials, org)
   layouts/Base.astro    html shell, meta, theme init, fonts
   components/           one file per home section, plus Seo, Icon, Header
-  pages/                /, /work/[slug], /approach, /404, /llms.txt
+  pages/                /, /work/[slug], /approach, /404, plus sitemap.xml,
+                        robots.txt and llms.txt endpoints
+  seo.ts                shared SEO settings (share image size, JSON-LD ids)
   scripts/              small vanilla scripts (about 2 KB gzipped in total)
   styles/global.css     tokens (both themes), base styles, motion
 ```
@@ -80,6 +83,17 @@ src/
   scroll timelines and a few small scripts, so neither was added.
 - **CSS is inlined** into each page (`build.inlineStylesheets: 'always'`). It
   is about 10 KB, and inlining removed two render-blocking requests.
+- **One font family.** Headlines and body text are both Geist (headlines set
+  heavier and tighter), labels are Geist Mono. Fewer font files on the
+  critical path than a separate display face.
+- **SEO.** Every indexable page carries a linked JSON-LD graph: the WebSite,
+  the page, its main image, a breadcrumb trail, and a Person node for Joshua
+  with every written form of the name (`SITE.alternateNames` in
+  `src/site.ts`). Home adds the full Person and the NightPatch Dev
+  Organization; case studies add the project as a CreativeWork. The sitemap
+  lives at `/sitemap.xml` (the address the old site used, so the Search
+  Console submission carries over) and lists each page's images. It has no
+  `<lastmod>` on purpose, since a build date would be inaccurate.
 - **Project years are optional** and only filled where the year is a confirmed
   fact. The list shows status (Live, Alpha, NDA) instead.
 
@@ -87,6 +101,11 @@ src/
 
 Vercel, static output. `vercel.json` sets clean URLs, no trailing slash,
 long-lived caching for hashed assets in `/_astro/`, and basic security
-headers. The site URL is set in `astro.config.mjs` (`site`); change it there
-if the domain changes, and the canonical URLs, sitemap, OG tags and
-`llms.txt` follow.
+headers.
+
+The public address (`site` in `astro.config.mjs`) is detected at build time:
+`SITE_URL` if set, otherwise the production URL the host provides (`URL` on
+Netlify, `VERCEL_PROJECT_PRODUCTION_URL` on Vercel), otherwise
+`https://ja-magbanua.vercel.app`. Canonical URLs, share images, the sitemap,
+robots.txt, JSON-LD and llms.txt all follow it. Set `SITE_URL` in the host's
+environment variables to pin a custom domain.

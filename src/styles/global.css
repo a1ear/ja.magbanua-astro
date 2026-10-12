@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/fraunces/opsz.css';
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/geist-mono';
 
@@ -74,7 +73,9 @@
   --color-on-accent: var(--on-accent);
   --color-line: var(--line);
 
-  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  /* Headlines use Geist too: one family, set heavier and tighter at size.
+     Saves a whole font download on the critical path. */
+  --font-display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'Cascadia Mono', monospace;
 
@@ -176,10 +177,15 @@
 
   .display {
     font-family: var(--font-display);
-    font-optical-sizing: auto;
-    font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 0.9;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    line-height: 0.92;
+  }
+
+  /* Smaller headings (cards, timeline, toolkit) set with font-display. */
+  .font-display {
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 
   .outline-text {
@@ -265,6 +271,7 @@
 
   .prose-case h2 {
     font-family: var(--font-display);
+    font-weight: 600;
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     letter-spacing: -0.02em;
     line-height: 1.1;
@@ -297,7 +304,7 @@
 .line {
   display: block;
   overflow: clip;
-  /* Room for descenders and the Fraunces overshoot inside the clip. */
+  /* Room for descenders inside the clip. */
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
 }

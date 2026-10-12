@@ -5,8 +5,12 @@ export const SITE = {
   shortName: 'Joshua Magbanua',
   role: 'Full Stack Developer',
   title: 'Joshua Anton Magbanua, Full Stack Developer & CFO at NightPatch Dev',
+  // Leads with both forms of the name people search for. Kept under 160
+  // characters so search results show it in full.
   description:
-    'Portfolio of Joshua Anton Magbanua, a Full Stack Developer and CFO & co-founder of NightPatch Dev, based in Kabankalan City, Philippines. Open to remote roles and freelance work.',
+    'Joshua Anton Magbanua (Joshua Magbanua) is a Full Stack Developer and CFO of NightPatch Dev in the Philippines, building business systems and fast websites.',
+  // Every way the name is written, for structured data.
+  alternateNames: ['Joshua Magbanua', 'Joshua A. Magbanua', 'JA Magbanua'],
   pitch:
     'I build billing and operations software for local businesses, plus landing pages that load fast.',
   email: 'jshant.magbanua@gmail.com',
